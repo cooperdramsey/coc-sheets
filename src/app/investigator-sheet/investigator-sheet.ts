@@ -10,10 +10,12 @@ import { Weapon } from '../Models/weapon';
 import { Wealth } from '../Models/wealth';
 import { FellowInvestigator } from '../Models/fellowInvestigators';
 import { JsonPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-investigator-sheet',
-  imports: [JsonPipe],
+  imports: [JsonPipe, MatCardModule, MatGridListModule],
   templateUrl: './investigator-sheet.html',
   styleUrl: './investigator-sheet.css',
 })
