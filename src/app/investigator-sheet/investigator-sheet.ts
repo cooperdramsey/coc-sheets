@@ -5,10 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { InvestigatorStateService } from '../Services/investigator-state.service';
 import { Subscription } from 'rxjs';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-investigator-sheet',
-  imports: [MatCardModule, MatGridListModule, CommonModule],
+  imports: [MatCardModule, MatGridListModule, CommonModule, MatChipsModule],
   templateUrl: './investigator-sheet.html',
   styleUrl: './investigator-sheet.css',
 })

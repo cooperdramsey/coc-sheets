@@ -55,10 +55,10 @@
     "max": 40
   },
   "temporaryInsanity": false,
-  "indefiniteInsanity": false,
-  "majorWound": false,
+  "indefiniteInsanity": true,
+  "majorWound": true,
   "unconscious": false,
-  "dying": false,
+  "dying": true,
   "movementRate": 8,
   "build": 0,
   "damageBonus": 0,
