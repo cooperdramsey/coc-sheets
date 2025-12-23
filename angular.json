@@ -28,7 +28,8 @@
             "styles": [
               "src/custom-theme.scss",
               "src/styles.css"
-            ]
+            ],
+            "outputPath": "dist/call-of-cthulhu-sheets"
           },
           "configurations": {
             "production": {
@@ -68,6 +69,9 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
