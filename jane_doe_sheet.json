@@ -1,0 +1,137 @@
+{
+  "name": "Jane Doe",
+  "birthplace": "Arkham",
+  "pronouns": "she/her",
+  "occupation": "Antiquarian",
+  "residence": "Boston",
+  "age": 32,
+  "strength": {
+    "name": "STR",
+    "regular": 50
+  },
+  "constitution": {
+    "name": "CON",
+    "regular": 60
+  },
+  "size": {
+    "name": "SIZ",
+    "regular": 70
+  },
+  "dexterity": {
+    "name": "DEX",
+    "regular": 65
+  },
+  "appearance": {
+    "name": "APP",
+    "regular": 55
+  },
+  "intelligence": {
+    "name": "INT",
+    "regular": 80
+  },
+  "power": {
+    "name": "POW",
+    "regular": 70
+  },
+  "education": {
+    "name": "EDU",
+    "regular": 75
+  },
+  "hitPoints": {
+    "current": 10,
+    "max": 15
+  },
+  "magicPoints": {
+    "current": 10,
+    "max": 12
+  },
+  "luck": {
+    "current": 55,
+    "starting": 55
+  },
+  "sanity": {
+    "starting": 30,
+    "current": 30,
+    "max": 40
+  },
+  "temporaryInsanity": false,
+  "indefiniteInsanity": true,
+  "majorWound": true,
+  "unconscious": false,
+  "dying": true,
+  "movementRate": 8,
+  "build": 0,
+  "damageBonus": 0,
+  "skills": [
+    {
+      "name": "Spot Hidden",
+      "baseValue": 5,
+      "regular": 25
+    },
+    {
+      "name": "Library Use",
+      "baseValue": 5,
+      "regular": 20
+    },
+    {
+      "name": "Occult",
+      "baseValue": 10,
+      "regular": 12
+    },
+    {
+      "name": "History",
+      "baseValue": 10,
+      "regular": 67
+    },
+    {
+      "name": "Art",
+      "baseValue": 5,
+      "regular": 98
+    },
+    {
+      "name": "Persuade",
+      "baseValue": 10,
+      "regular": 20
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Brawl",
+      "damage": "1d3 + DB",
+      "numberOfAttacks": 1,
+      "range": null,
+      "ammo": null,
+      "malfunction": null
+    }
+  ],
+  "myStory": "A curious mind with a dark past.",
+  "personalDescription": "Tall, bespectacled, and inquisitive.",
+  "ideologyBeliefs": "Knowledge above all.",
+  "significantPeople": "Mentor at Miskatonic University.",
+  "meaningfulLocations": "Old family library.",
+  "treasuredPossessions": "Inherited locket.",
+  "traits": "Curious, methodical.",
+  "injuriesScars": "",
+  "phobiasManias": "",
+  "arcaneTomesSpells": "",
+  "encountersWithTheMythos": "",
+  "gearAndPossessions": [
+    "Notebook",
+    "Magnifying glass"
+  ],
+  "wealth": {
+    "spendingLevel": 150,
+    "cash": 100,
+    "assets": [
+      "House",
+      "Car"
+    ]
+  },
+  "fellowInvestigators": [
+    {
+      "characterName": "John Smith",
+      "playerName": "Cooper",
+      "notes": "Met during the Miskatonic expedition."
+    }
+  ]
+}

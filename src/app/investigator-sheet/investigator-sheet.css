@@ -1,0 +1,13 @@
+mat-card {
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+
+  mat-card-title {
+    font-size: 1em;
+  }
+}
+
+.center-text {
+  text-align: center;
+}

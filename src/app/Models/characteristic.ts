@@ -26,7 +26,20 @@ export class Characteristic {
 
     public setRegular(value: number): void {
         this._regular = value;
-        this._half = value / 2;
-        this._fifth = value / 5;
+        this._half = Math.floor(value / 2);
+        this._fifth = Math.floor(value / 5);
+    }
+
+    public static fromJSON(src: any, label: string): Characteristic {
+        const c = new Characteristic(label);
+        if (typeof src?.regular === 'number') c.setRegular(src.regular);
+        return c;
+    }
+
+    public toJSON(): any {
+        return {
+            name: this._name,
+            regular: this._regular ?? 0
+        };
     }
 }

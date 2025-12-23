@@ -24,8 +24,8 @@ export class Skill {
 
     public setRegular(value: number): void {
         this._regular = value;
-        this._half = value / 2;
-        this._fifth = value / 5;
+        this._half = Math.floor(value / 2);
+        this._fifth = Math.floor(value / 5);
     }
 
     public get half(): number | undefined {
@@ -36,5 +36,19 @@ export class Skill {
         return this._fifth;
     }
 
-    public description: string | undefined;
+    public static fromJSON(src: any): Skill {
+        const name = src?.name ?? '';
+        const base = Number((src?.baseValue ?? src?.base) ?? 0);
+        const sk = new Skill(name, base);
+        if (typeof src?.regular === 'number') sk.setRegular(src.regular);
+        return sk;
+    }
+
+    public toJSON(): any {
+        return {
+            name: this._name,
+            baseValue: this._baseValue,
+            regular: this._regular ?? 0
+        };
+    }
 }
