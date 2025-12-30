@@ -1,6 +1,9 @@
 <mat-toolbar>
   <span>Call of Cthulhu Sheets</span>
   <span class="toolbar-spacer"></span>
+  <button mat-icon-button routerLink="/create" aria-label="Create new character">
+    <mat-icon>add</mat-icon>
+  </button>
   <button matIconButton (click)="uploadSheetData()">
     <mat-icon>file_upload</mat-icon>
   </button>

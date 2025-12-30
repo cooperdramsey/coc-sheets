@@ -1,0 +1,69 @@
+<div class="cc">
+  <h1>Create Investigator</h1>
+
+  <mat-horizontal-stepper linear>
+    <!-- Player Info -->
+    <mat-step [stepControl]="playerForm" label="Player Info">
+      <form [formGroup]="playerForm" class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Player Name</mat-label>
+          <input matInput formControlName="playerName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Character Name</mat-label>
+          <input matInput formControlName="characterName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Pronouns</mat-label>
+          <input matInput formControlName="pronouns" placeholder="e.g., she/her" />
+        </mat-form-field>
+
+        <div class="step-actions">
+          <span></span>
+          <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Characteristics -->
+    <mat-step [stepControl]="characteristicsForm" label="Characteristics">
+      <form [formGroup]="characteristicsForm" class="grid grid-4">
+        <mat-form-field appearance="outline"><mat-label>STR</mat-label><input matInput type="number" formControlName="str" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>CON</mat-label><input matInput type="number" formControlName="con" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>SIZ</mat-label><input matInput type="number" formControlName="siz" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>DEX</mat-label><input matInput type="number" formControlName="dex" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>APP</mat-label><input matInput type="number" formControlName="app" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>INT</mat-label><input matInput type="number" formControlName="int" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>POW</mat-label><input matInput type="number" formControlName="pow" /></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>EDU</mat-label><input matInput type="number" formControlName="edu" /></mat-form-field>
+
+        <div class="step-actions">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Equipment -->
+    <mat-step [stepControl]="equipmentForm" label="Equipment">
+      <form [formGroup]="equipmentForm" class="grid">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Gear</mat-label>
+          <textarea matInput rows="4" formControlName="gear"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Spending Level</mat-label>
+          <input matInput type="number" formControlName="spendingLevel" />
+        </mat-form-field>
+
+        <div class="step-actions">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" (click)="finish()">Finish</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

@@ -5,10 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { InvestigatorStateService } from '../../Services/investigator-state.service';
 import { InvestigatorLoaderService } from '../../Services/investigator-loader.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [MatSlideToggleModule, MatToolbarModule, MatButtonModule, MatIconModule],
+  imports: [MatSlideToggleModule, MatToolbarModule, MatButtonModule, MatIconModule, RouterModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

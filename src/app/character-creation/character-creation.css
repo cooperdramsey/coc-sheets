@@ -1,0 +1,26 @@
+.cc {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 8px;
+}
+
+.grid {
+  display: grid;
+  gap: 12px;
+}
+.grid-4 {
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+}
+.full {
+  grid-column: 1 / -1;
+}
+
+form {
+  margin-top: 8px;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
