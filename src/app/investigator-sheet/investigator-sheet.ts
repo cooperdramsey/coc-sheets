@@ -8,10 +8,11 @@ import { Subscription } from 'rxjs';
 import { MatChipsModule } from '@angular/material/chips';
 import { Dice } from "../dice/dice";
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-investigator-sheet',
-  imports: [MatCardModule, MatGridListModule, CommonModule, MatChipsModule, Dice, MatButtonModule],
+  imports: [MatCardModule, MatGridListModule, CommonModule, MatChipsModule, Dice, MatButtonModule, RouterLink],
   templateUrl: './investigator-sheet.html',
   styleUrl: './investigator-sheet.css',
 })

@@ -1,9 +1,8 @@
 <div class="cc">
   <h1>Create Investigator</h1>
-
   <mat-horizontal-stepper linear>
-    <!-- Player Info -->
-    <mat-step [stepControl]="playerForm" label="Player Info">
+    <!-- Info -->
+    <mat-step [stepControl]="playerForm" label="Info">
       <form [formGroup]="playerForm" class="grid">
         <mat-form-field appearance="outline">
           <mat-label>Player Name</mat-label>
@@ -18,6 +17,16 @@
         <mat-form-field appearance="outline">
           <mat-label>Pronouns</mat-label>
           <input matInput formControlName="pronouns" placeholder="e.g., she/her" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Birthplace</mat-label>
+          <input matInput formControlName="birthplace" placeholder="City, Country" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Residence</mat-label>
+          <input matInput formControlName="residence" placeholder="City, Country" />
         </mat-form-field>
 
         <div class="step-actions">
@@ -38,6 +47,67 @@
         <mat-form-field appearance="outline"><mat-label>INT</mat-label><input matInput type="number" formControlName="int" /></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>POW</mat-label><input matInput type="number" formControlName="pow" /></mat-form-field>
         <mat-form-field appearance="outline"><mat-label>EDU</mat-label><input matInput type="number" formControlName="edu" /></mat-form-field>
+        <div class="step-actions">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Age -->
+    <mat-step [stepControl]="ageForm" label="Age">
+      <form [formGroup]="ageForm" class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Age</mat-label>
+          <input matInput type="number" formControlName="age"/>
+        </mat-form-field>
+
+        @if (ageForm.get('age')?.value ?? 0 >= 15) {
+          <div class="hint">
+            {{ ageAdvice }}
+          </div>
+        }
+        
+
+        <div class="step-actions">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary"
+                  [disabled]="!ageForm.valid"
+                  matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Occupation & Skills -->
+    <mat-step [stepControl]="occupationForm" label="Occupation & Skills">
+      <form [formGroup]="occupationForm" class="grid">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Occupation</mat-label>
+          <input matInput formControlName="occupation" placeholder="e.g., Detective" />
+        </mat-form-field>
+
+        <div formArrayName="skills" class="full">
+          @for (skill of skills.controls; track $index) {
+            <div class="grid grid-3" [formGroupName]="$index">
+              <mat-form-field appearance="outline">
+                <mat-label>Skill Name</mat-label>
+                <input matInput formControlName="name" placeholder="e.g., Spot Hidden" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Points</mat-label>
+                <input matInput type="number" formControlName="points" />
+              </mat-form-field>
+
+              <div class="step-actions">
+                <button mat-stroked-button color="warn" type="button" (click)="removeSkill($index)">Remove</button>
+              </div>
+            </div>
+          }
+          <div class="step-actions">
+            <button mat-stroked-button type="button" (click)="addSkill()">Add Skill</button>
+          </div>
+        </div>
 
         <div class="step-actions">
           <button mat-stroked-button matStepperPrevious>Back</button>
@@ -46,17 +116,47 @@
       </form>
     </mat-step>
 
-    <!-- Equipment -->
-    <mat-step [stepControl]="equipmentForm" label="Equipment">
-      <form [formGroup]="equipmentForm" class="grid">
+    <!-- Backstory & Connections -->
+    <mat-step [stepControl]="backstoryForm" label="Backstory & Connections">
+      <form [formGroup]="backstoryForm" class="grid">
         <mat-form-field appearance="outline" class="full">
-          <mat-label>Gear</mat-label>
-          <textarea matInput rows="4" formControlName="gear"></textarea>
+          <mat-label>Backstory</mat-label>
+          <textarea matInput rows="5" formControlName="backstory" placeholder="History, ideology/beliefs, traits..."></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Connections</mat-label>
+          <textarea matInput rows="4" formControlName="connections" placeholder="Important people, organizations, contacts..."></textarea>
+        </mat-form-field>
+
+        <div class="step-actions">
+          <button mat-stroked-button matStepperPrevious>Back</button>
+          <button mat-raised-button color="primary" matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Wealth -->
+    <mat-step [stepControl]="wealthForm" label="Wealth">
+      <form [formGroup]="wealthForm" class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Credit Rating</mat-label>
+          <input matInput type="number" formControlName="creditRating" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Spending Level</mat-label>
           <input matInput type="number" formControlName="spendingLevel" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Cash</mat-label>
+          <input matInput formControlName="cash" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Assets</mat-label>
+          <textarea matInput rows="3" formControlName="assets"></textarea>
         </mat-form-field>
 
         <div class="step-actions">
