@@ -1,8 +1,18 @@
 @if (investigator != null) {
-  <mat-grid-list cols="5" rowHeight="4:1" gutterSize="8px">
-    <mat-grid-tile colspan="2">Investigator</mat-grid-tile>
-    <mat-grid-tile colspan="3">Characteristics</mat-grid-tile>
-    <mat-grid-tile colspan="2" rowspan="3">
+  <div class="sheet">
+    <!-- Header row: 2/5 + 3/5 -->
+    <div class="row">
+      <div class="col-2">
+        <div class="row-title">Investigator</div>
+      </div>
+      <div class="col-3">
+        <div class="row-title">Characteristics</div>
+      </div>
+    </div>
+
+    <!-- Main info row: left 2/5 card, right 3/5 stats grid (3 per row) -->
+    <div class="row">
+      <div class="col-2">
         <mat-card appearance="outlined">
           <mat-card-content>
             <p>Name: {{ investigator.name }}</p>
@@ -13,36 +23,43 @@
             <p>Birthplace: {{ investigator.birthplace }}</p>
           </mat-card-content>
         </mat-card>
-      </mat-grid-tile>
+      </div>
+      <div class="col-3">
+        <div class="row stats-grid">
+          @for (stat of [
+            investigator.strength,
+            investigator.constitution,
+            investigator.size,
+            investigator.dexterity,
+            investigator.appearance,
+            investigator.intelligence,
+            investigator.power,
+            investigator.education
+          ]; track stat.name) {
+            <div class="third">
+              <mat-card>
+                <mat-card-title>{{ stat.name }}</mat-card-title>
+                <mat-card-content>
+                  {{ stat.regular }}/{{ stat.half }}/{{ stat.fifth }}
+                </mat-card-content>
+              </mat-card>
+            </div>
+          }
+          <div class="third">
+            <mat-card>
+              <mat-card-title>Move Rate</mat-card-title>
+              <mat-card-content>
+                {{ investigator.movementRate }}
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      @for (stat of [
-        investigator.strength,
-        investigator.constitution,
-        investigator.size,
-        investigator.dexterity,
-        investigator.appearance,
-        investigator.intelligence,
-        investigator.power,
-        investigator.education
-      ]; track stat.name) {
-        <mat-grid-tile>
-          <mat-card>
-            <mat-card-title>{{ stat.name }}</mat-card-title>
-            <mat-card-content>
-              {{ stat.regular }}/{{ stat.half }}/{{ stat.fifth }}
-            </mat-card-content>
-          </mat-card>
-        </mat-grid-tile>
-      }
-      <mat-grid-tile>
-        <mat-card>
-          <mat-card-title>Move Rate</mat-card-title>
-          <mat-card-content>
-            {{ investigator.movementRate }}
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile>
+    <!-- Row of five equal tiles -->
+    <div class="row">
+      <div class="fifth">
         <mat-card>
           <mat-card-title>Hit Points ({{ investigator.hitPoints.current }} / {{ investigator.hitPoints.max }})</mat-card-title>
           <mat-card-footer>
@@ -53,8 +70,8 @@
             </mat-chip-set>
           </mat-card-footer>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile>
+      </div>
+      <div class="fifth">
         <mat-card>
           <mat-card-title>Sanity ({{ investigator.sanity.current }} / {{ investigator.sanity.max }}) Starting: {{ investigator.sanity.starting }}</mat-card-title>
           <mat-card-footer>
@@ -64,36 +81,40 @@
             </mat-chip-set>
           </mat-card-footer>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile></mat-grid-tile>
-      <mat-grid-tile>
+      </div>
+      <div class="fifth"></div>
+      <div class="fifth">
         <mat-card>
           <mat-card-title>Magic Points ({{ investigator.magicPoints.current }} / {{ investigator.magicPoints.max }})</mat-card-title>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile>
+      </div>
+      <div class="fifth">
         <mat-card>
           <mat-card-title>Luck</mat-card-title>
           <mat-card-content>
             Current: {{ investigator.luck.current }} <br> Starting: {{ investigator.luck.starting }}
           </mat-card-content>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="4" rowspan="2">
+      </div>
+    </div>
+
+    <!-- Skills (4/5) + Combat (1/5) -->
+    <div class="row">
+      <div class="col-4">
         <mat-card>
           <mat-card-title>Skills</mat-card-title>
           <mat-card-content>
-            <mat-grid-list cols="4" rowHeight="10:1">
+            <div class="skills-grid">
               @for (skill of investigator.skills; track skill.name) {
-                <mat-grid-tile colspan="1" rowspan="1">
+                <div class="skills-item">
                   {{ skill.name }} ({{ skill.baseValue }}%): {{ skill.regular }}/{{ skill.half }}/{{ skill.fifth }}
-                </mat-grid-tile>
+                </div>
               }
-            </mat-grid-list>
+            </div>
           </mat-card-content>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="1" rowspan="2">
+      </div>
+      <div class="col-1">
         <mat-card>
           <mat-card-title>Combat</mat-card-title>
           <mat-card-content>
@@ -101,18 +122,22 @@
             <p>Damage Bonus: {{ investigator.damageBonus }}</p>
           </mat-card-content>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="2" rowspan="2">
+      </div>
+    </div>
+
+    <!-- Gear (2/5) + Notes (2/5) + Wealth (1/5) -->
+    <div class="row">
+      <div class="col-2">
         <mat-card>
           <mat-card-title>Gear and Weapons</mat-card-title>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile colspan="2" rowspan="2">
+      </div>
+      <div class="col-2">
         <mat-card>
           <mat-card-title>Notes</mat-card-title>
         </mat-card>
-      </mat-grid-tile>
-      <mat-grid-tile rowspan="2">
+      </div>
+      <div class="col-1">
         <mat-card>
           <mat-card-title>Wealth</mat-card-title>
           <mat-card-content>
@@ -121,8 +146,9 @@
             Assets: {{ investigator.wealth.assets }}
           </mat-card-content>
         </mat-card>
-      </mat-grid-tile>
-    </mat-grid-list>
+      </div>
+    </div>
+  </div>
 } @else {
   <div style="padding: 16px;">
     No investigator loaded. Use the navbar upload to import a sheet.
