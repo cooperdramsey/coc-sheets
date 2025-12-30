@@ -24,3 +24,15 @@ form {
   justify-content: space-between;
   margin-top: 8px;
 }
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 1fr 120px auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.skill-row .name,
+.skill-row .points {
+  margin: 0; /* tighter spacing inside rows */
+}
