@@ -1,0 +1,22 @@
+<div>
+  <button
+    mat-fab
+    color="primary"
+    aria-label="Roll D100"
+    class="dice-fab"
+    (click)="rollDice()"
+  >
+    <mat-icon>casino</mat-icon>
+  </button>
+
+  @if (historyView.length) {
+    <div class="dice-stack" aria-live="polite" role="status">
+      @for (roll of historyView; track roll.timestamp) {
+        <div class="dice-chip">
+          <strong>{{ roll.result }}</strong>
+          <span class="dice-chip-meta">d{{ roll.sides }}</span>
+        </div>
+      }
+    </div>
+  }
+</div>
