@@ -45,6 +45,42 @@
   opacity: 0.75;
 }
 
+.dice-dock {
+  position: fixed;
+  inset-block-end: var(--fab-spacing-block);
+  inset-inline-end: calc(var(--fab-spacing-inline) + var(--fab-size) + 12px);
+  z-index: 1001;
+  display: flex;
+  flex-direction: row-reverse; /* put last item (d100) nearest the FAB */
+  gap: 8px;
+  align-items: center;
+  pointer-events: auto;
+  animation: fadeInUp 140ms ease-out both;
+}
+
+.dice-option {
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  position: relative; /* for badge positioning */
+}
+
+/* Optional: slightly enlarge badge and offset it */
+/* .dice-option .mat-badge-content {
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  transform: translate(2px, -2px);
+} */
+
+:host-context([dir='rtl']) .dice-dock {
+  inset-inline-start: calc(var(--fab-spacing-inline) + var(--fab-size) + 12px);
+  inset-inline-end: auto;
+  flex-direction: row;
+}
+
 /* RTL: move to the left side */
 :host-context([dir='rtl']) .dice-fab,
 :host-context([dir='rtl']) .dice-stack {
