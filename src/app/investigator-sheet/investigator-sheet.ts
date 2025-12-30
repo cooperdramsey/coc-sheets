@@ -6,10 +6,11 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { InvestigatorStateService } from '../Services/investigator-state.service';
 import { Subscription } from 'rxjs';
 import { MatChipsModule } from '@angular/material/chips';
+import { Dice } from "../dice/dice";
 
 @Component({
   selector: 'app-investigator-sheet',
-  imports: [MatCardModule, MatGridListModule, CommonModule, MatChipsModule],
+  imports: [MatCardModule, MatGridListModule, CommonModule, MatChipsModule, Dice],
   templateUrl: './investigator-sheet.html',
   styleUrl: './investigator-sheet.css',
 })
