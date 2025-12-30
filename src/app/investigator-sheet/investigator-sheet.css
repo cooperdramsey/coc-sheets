@@ -59,8 +59,14 @@ mat-card {
   .third { flex: 1 1 calc((100% - var(--gap)) / 2); } /* 2 per row */
   .fifth { flex: 1 1 calc((100% - var(--gap)) / 2); } /* 2 per row */
   .skills-item { flex: 1 1 calc((100% - var(--gap)) / 2); } /* 2 per row */
+  .sheet {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(72px, 12vh, 120px));
+  }
 }
 
 @media (max-width: 500px) {
   .third, .fifth, .skills-item { flex: 1 1 100%; } /* stack */
+  .sheet {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(96px, 16vh, 160px));
+  }
 }
