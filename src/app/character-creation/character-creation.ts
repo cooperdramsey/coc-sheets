@@ -304,6 +304,11 @@ export class CharacterCreation {
     const additional = this.getCharacteristicValueFromForm(additionalCharacteristic);
     return (edu * 2) + (additional * 2);
   }
+
+  calculatePersonalInterestSkillPoints(): number {
+    const int = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.INTELLIGENCE);
+    return int * 2;
+  }
   // end various functions
 
   private getCharacteristicValueFromForm(characterisitc: InvestigatorCharacteristics): number {
