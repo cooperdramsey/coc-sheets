@@ -74,12 +74,21 @@
     <!-- Occupation & Skills -->
     <mat-step [stepControl]="occupationForm" label="Occupation & Skills">
       <form [formGroup]="occupationForm" class="skills-form">
-        <mat-form-field appearance="outline" class="full">
-          <mat-label>Occupation</mat-label>
-          <input matInput formControlName="occupation" placeholder="e.g., Detective" />
-        </mat-form-field>
-
-        <div formArrayName="skills" class="full">
+        <div class="occupation-row">
+          <mat-form-field appearance="outline" class="name">
+            <mat-label>Occupation</mat-label>
+            <input matInput formControlName="occupation" placeholder="e.g., Detective" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Occupation Skill Points</mat-label>
+            <input matInput readonly="true" type="number" min="0" formControlName="occupationPoints" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Personal Interest Skill Points</mat-label>
+            <input matInput readonly="true" type="number" min="0" formControlName="personalInterestPoints" />
+          </mat-form-field>
+        </div>
+        <div formArrayName="skills">
           @for (skill of skills.controls; track $index) {
             <div class="skills-row" [formGroupName]="$index">
               <!-- Is Professional Skill -->

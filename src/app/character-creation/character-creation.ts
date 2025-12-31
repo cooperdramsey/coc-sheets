@@ -105,6 +105,16 @@ export class CharacterCreation {
     { name: 'Track', points: 10 }
   ]
 
+  ngOnInit(): void {
+    this.recalculatePoints();
+
+    // Update points whenever characteristics change
+    this.characteristicsForm.valueChanges.subscribe(() => this.recalculatePoints());
+
+    // Optional: also recalc when occupation changes (if it affects the “additional” characteristic)
+    this.occupationForm.get('occupation')?.valueChanges.subscribe(() => this.recalculatePoints());
+  }
+
   playerForm = this.fb.group({
       playerName: ['', Validators.required],
       characterName: ['', Validators.required],
@@ -128,6 +138,8 @@ export class CharacterCreation {
 
   occupationForm = this.fb.group({
       occupation: ['', Validators.required],
+      occupationPoints: [0],
+      personalInterestPoints: [0],
       skills: this.fb.array(this.DEFAULT_SKILLS.map(skill => this.fb.group({
         isProfessional: [false],
         name: [skill.name, Validators.required],
@@ -332,6 +344,15 @@ export class CharacterCreation {
       default:
         return 0;
     }
+  }
+
+  private recalculatePoints(): void {
+    const occ = this.calculateOccupationSkillPoints(); // pass a different characteristic if needed
+    const pi = this.calculatePersonalInterestSkillPoints();
+    this.occupationForm.patchValue(
+      { occupationPoints: occ, personalInterestPoints: pi },
+      { emitEvent: false }
+    );
   }
 
   finish(): void {
