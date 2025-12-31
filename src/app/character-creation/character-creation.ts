@@ -121,6 +121,7 @@ export class CharacterCreation {
   occupationForm = this.fb.group({
       occupation: ['', Validators.required],
       skills: this.fb.array(this.DEFAULT_SKILLS.map(skill => this.fb.group({
+        isProfessional: [false],
         name: [skill.name, Validators.required],
         points: [skill.points, [Validators.min(0)]]
       })))
@@ -190,6 +191,7 @@ export class CharacterCreation {
   // skll helpers
   createSkill(): FormGroup {
     return this.fb.group({
+      isProfessional: [false],
       name: ['', Validators.required],
       points: [0, [Validators.min(0)]]
     });

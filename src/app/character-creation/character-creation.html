@@ -73,7 +73,7 @@
 
     <!-- Occupation & Skills -->
     <mat-step [stepControl]="occupationForm" label="Occupation & Skills">
-      <form [formGroup]="occupationForm" class="grid grid-4">
+      <form [formGroup]="occupationForm" class="skills-form">
         <mat-form-field appearance="outline" class="full">
           <mat-label>Occupation</mat-label>
           <input matInput formControlName="occupation" placeholder="e.g., Detective" />
@@ -81,7 +81,10 @@
 
         <div formArrayName="skills" class="full">
           @for (skill of skills.controls; track $index) {
-            <div class="skill-row" [formGroupName]="$index">
+            <div class="skills-row" [formGroupName]="$index">
+              <!-- Is Professional Skill -->
+              <mat-checkbox formControlName="isProfessional" matTooltip="Professional Skill" class="skill-checkbox"></mat-checkbox>
+
               <!-- Name -->
               <mat-form-field appearance="outline" class="name">
                 <mat-label>Skill Name</mat-label>
@@ -96,7 +99,7 @@
 
               <!-- Remove (disabled for locked) -->
               <button mat-icon-button color="warn" aria-label="Remove skill" matTooltip="Remove"
-                      type="button" (click)="removeSkill($index)">
+                      type="button" class="skill-remove-button" (click)="removeSkill($index)">
                 <mat-icon>close</mat-icon>
               </button>
             </div>

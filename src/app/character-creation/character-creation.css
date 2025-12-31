@@ -19,20 +19,39 @@ form {
   margin-top: 8px;
 }
 
+.skills-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skills-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.skills-row .name {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.skills-row .points {
+  flex: 0 0 110px;
+}
+
+.skill-checkbox {
+  margin-bottom: 20px;
+}
+
+.skill-remove-button {
+  margin-bottom: 20px;
+}
+
 .step-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
-}
-
-.skill-row {
-  display: grid;
-  grid-template-columns: 1fr 120px auto;
-  gap: 8px;
-  align-items: center;
-}
-
-.skill-row .name,
-.skill-row .points {
-  margin: 0; /* tighter spacing inside rows */
 }
