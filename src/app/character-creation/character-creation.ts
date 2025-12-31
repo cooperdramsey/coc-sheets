@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
 
 @Component({
   selector: 'app-character-creation',
@@ -30,13 +31,20 @@ export class CharacterCreation {
 
   // TODO pull rules like this into services
   private AGE_RULES = [
-    { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5, characteristics: ['STR', 'SIZ'], appReduction: 0, eduImprovements: 0},
-    { key: '20s or 30s',  label: '20-39', min: 20, max: 39, penalty: 0, characteristics: [], appReduction: 0, eduImprovements: 1},
-    { key: '40s', label: '40-49', min: 40, max: 49, penalty: 5, characteristics: ['STR', 'CON', 'DEX'], appReduction: 5, eduImprovements: 2},
-    { key: '50s',  label: '50-59', min: 50, max: 59, penalty: 10, characteristics: ['STR', 'CON', 'DEX'], appReduction: 10, eduImprovements: 3},
-    { key: '60s', label: '60-69', min: 60, max: 69, penalty: 20, characteristics: ['STR', 'CON', 'DEX'], appReduction: 15, eduImprovements: 4},
-    { key: '70s',  label: '70-79', min: 70, max: 79, penalty: 40, characteristics: ['STR', 'CON', 'DEX'], appReduction: 20, eduImprovements: 4},
-    { key: '80+',label: '80+',   min: 80, max: 120, penalty: 80, characteristics: ['STR', 'CON', 'DEX'], appReduction: 25, eduImprovements: 4}
+    { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5, 
+      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.SIZE], appReduction: 0, eduImprovements: 0},
+    { key: '20s or 30s',  label: '20-39', min: 20, max: 39, penalty: 0, 
+      characteristics: [], appReduction: 0, eduImprovements: 1},
+    { key: '40s', label: '40-49', min: 40, max: 49, penalty: 5, 
+      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 5, eduImprovements: 2},
+    { key: '50s',  label: '50-59', min: 50, max: 59, penalty: 10, 
+      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 10, eduImprovements: 3},
+    { key: '60s', label: '60-69', min: 60, max: 69, penalty: 20, 
+      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 15, eduImprovements: 4},
+    { key: '70s',  label: '70-79', min: 70, max: 79, penalty: 40, 
+      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 20, eduImprovements: 4},
+    { key: '80+',label: '80+',   min: 80, max: 120, penalty: 80, 
+      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 25, eduImprovements: 4}
   ];
 
   // TODO move into service or configuration
@@ -208,25 +216,25 @@ export class CharacterCreation {
 
   // TODO various functions for computing rules stuff and derived values
   calculateHitPoints(): number {
-    const con = this.characteristicsForm.get('con')?.value ?? 0;
-    const siz = this.characteristicsForm.get('siz')?.value ?? 0;
+    const con = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.CONSTITUTION);
+    const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
     return Math.floor((con + siz) / 10);
   }
 
   calculateSanityPoints(): number {
-    const pow = this.characteristicsForm.get('pow')?.value ?? 0;
+    const pow = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.POWER);
     return pow;
   }
 
   calculateMagicPoints(): number {
-    const pow = this.characteristicsForm.get('pow')?.value ?? 0;
+    const pow = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.POWER);
     return Math.floor(pow / 5);
   }
 
   calculateMoveRate(): number {
-    const str = this.characteristicsForm.get('str')?.value ?? 0;
-    const dex = this.characteristicsForm.get('dex')?.value ?? 0;
-    const siz = this.characteristicsForm.get('siz')?.value ?? 0;
+    const str = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.STRENGTH);
+    const dex = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.DEXTERITY);
+    const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
     const ageBand = this.currentAgeBand;
     var move = 0;
     if (str < siz && dex < siz) {
@@ -264,8 +272,8 @@ export class CharacterCreation {
   }
 
   calculateDamageBuildDodgeValues(): { damage: string; build: number } {
-    const str = this.characteristicsForm.get('str')?.value ?? 0;
-    const siz = this.characteristicsForm.get('siz')?.value ?? 0;
+    const str = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.STRENGTH);
+    const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
     const total = str + siz;
     var lookup = this.DAMAGE_BUILD_TABLE.find(r => total >= r.min && total <= r.max);
     let damage = lookup ? lookup.damage : '';
@@ -274,8 +282,8 @@ export class CharacterCreation {
   }
 
   calculateDerivedSkills(): any {
-    const dex = this.characteristicsForm.get('dex')?.value ?? 0;
-    const edu = this.characteristicsForm.get('edu')?.value ?? 0;
+    const dex = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.DEXTERITY);
+    const edu = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.EDUCATION);
     var skills = [];
 
     // Cthulhu Mythos
@@ -290,7 +298,36 @@ export class CharacterCreation {
 
     return skills;
   }
+
+  calculateOccupationSkillPoints(additionalCharacteristic: InvestigatorCharacteristics = InvestigatorCharacteristics.EDUCATION): number {
+    const edu = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.EDUCATION);
+    const additional = this.getCharacteristicValueFromForm(additionalCharacteristic);
+    return (edu + additional) * 4;
+  }
   // end various functions
+
+  private getCharacteristicValueFromForm(characterisitc: InvestigatorCharacteristics): number {
+    switch (characterisitc) {
+      case InvestigatorCharacteristics.STRENGTH:
+        return this.characteristicsForm.get('str')?.value ?? 0;
+      case InvestigatorCharacteristics.CONSTITUTION:
+        return this.characteristicsForm.get('con')?.value ?? 0;
+      case InvestigatorCharacteristics.SIZE:
+        return this.characteristicsForm.get('siz')?.value ?? 0;
+      case InvestigatorCharacteristics.DEXTERITY:
+        return this.characteristicsForm.get('dex')?.value ?? 0;
+      case InvestigatorCharacteristics.APPEARANCE:
+        return this.characteristicsForm.get('app')?.value ?? 0;
+      case InvestigatorCharacteristics.INTELLIGENCE:
+        return this.characteristicsForm.get('int')?.value ?? 0;
+      case InvestigatorCharacteristics.POWER:
+        return this.characteristicsForm.get('pow')?.value ?? 0;
+      case InvestigatorCharacteristics.EDUCATION:
+        return this.characteristicsForm.get('edu')?.value ?? 0;
+      default:
+        return 0;
+    }
+  }
 
   finish(): void {
     const result = {
