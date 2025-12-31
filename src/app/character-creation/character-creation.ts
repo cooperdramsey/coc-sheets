@@ -302,7 +302,7 @@ export class CharacterCreation {
   calculateOccupationSkillPoints(additionalCharacteristic: InvestigatorCharacteristics = InvestigatorCharacteristics.EDUCATION): number {
     const edu = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.EDUCATION);
     const additional = this.getCharacteristicValueFromForm(additionalCharacteristic);
-    return (edu + additional) * 4;
+    return (edu * 2) + (additional * 2);
   }
   // end various functions
 
