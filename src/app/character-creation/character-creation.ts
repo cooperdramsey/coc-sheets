@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +19,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatCheckboxModule
   ],
   templateUrl: './character-creation.html',
   styleUrl: './character-creation.css',
@@ -50,6 +52,51 @@ export class CharacterCreation {
     { min: 445, max: 524, damage: '+5d6', build: 6 }
   ];
 
+  // TODO move into configuration or service
+  // Default skills list
+  private DEFAULT_SKILLS = [
+    { name: 'Accounting', points: 5 },
+    { name: 'Anthropology', points: 1 },
+    { name: 'Appraise', points: 5 },
+    { name: 'Archaeology', points: 1 },
+    { name: 'Art/Craft', points: 5 },
+    { name: 'Charm', points: 15 },
+    { name: 'Climb', points: 20 },
+    { name: 'Disguise', points: 5 },
+    { name: 'Elec. Repair', points: 10 },
+    { name: 'Fast Talk', points: 5 },
+    { name: 'Fighting (Brawl)', points: 25 },
+    { name: 'Firearms (Handgun)', points: 20 },
+    { name: 'Firearms (Rifle/Shotgun)', points: 25 },
+    { name: 'First Aid', points: 30 },
+    { name: 'History', points: 5 },
+    { name: 'Intimidate', points: 15 },
+    { name: 'Jump', points: 20 },
+    { name: 'Language (Other)', points: 1 },
+    { name: 'Law', points: 5 },
+    { name: 'Library Use', points: 20 },
+    { name: 'Listen', points: 20 },
+    { name: 'Locksmith', points: 1 },
+    { name: 'Mech. Repair', points: 10 },
+    { name: 'Medicine', points: 1 },
+    { name: 'Natural World', points: 10 },
+    { name: 'Navigate', points: 10 },
+    { name: 'Occult', points: 5 },
+    { name: 'Persuade', points: 10 },
+    { name: 'Pilot', points: 1 },
+    { name: 'Psychoanalysis', points: 1 },
+    { name: 'Psychology', points: 10 },
+    { name: 'Ride', points: 5 },
+    { name: 'Science', points: 1 },
+    { name: 'Sleight of Hand', points: 10 },
+    { name: 'Spot Hidden', points: 25 },
+    { name: 'Stealth', points: 20 },
+    { name: 'Survival', points: 10 },
+    { name: 'Swim', points: 20 },
+    { name: 'Throw', points: 20 },
+    { name: 'Track', points: 10 }
+  ]
+
   playerForm = this.fb.group({
       playerName: ['', Validators.required],
       characterName: ['', Validators.required],
@@ -73,7 +120,10 @@ export class CharacterCreation {
 
   occupationForm = this.fb.group({
       occupation: ['', Validators.required],
-      skills: this.fb.array([this.createSkill()]),
+      skills: this.fb.array(this.DEFAULT_SKILLS.map(skill => this.fb.group({
+        name: [skill.name, Validators.required],
+        points: [skill.points, [Validators.min(0)]]
+      })))
     });
 
   backstoryForm = this.fb.group({
@@ -211,16 +261,32 @@ export class CharacterCreation {
     return move;
   }
 
-  calculateDamageBuildDodgeValues(): { damage: string; build: number, dodge: number } {
+  calculateDamageBuildDodgeValues(): { damage: string; build: number } {
     const str = this.characteristicsForm.get('str')?.value ?? 0;
     const siz = this.characteristicsForm.get('siz')?.value ?? 0;
-    const dex = this.characteristicsForm.get('dex')?.value ?? 0;
     const total = str + siz;
     var lookup = this.DAMAGE_BUILD_TABLE.find(r => total >= r.min && total <= r.max);
     let damage = lookup ? lookup.damage : '';
     let build = lookup ? lookup.build : 0;
-    let dodge = Math.floor(dex / 2);
-    return { damage, build, dodge };
+    return { damage, build };
+  }
+
+  calculateDerivedSkills(): any {
+    const dex = this.characteristicsForm.get('dex')?.value ?? 0;
+    const edu = this.characteristicsForm.get('edu')?.value ?? 0;
+    var skills = [];
+
+    // Cthulhu Mythos
+    skills.push({ name: 'Cthulhu Mythos', points: 0 });
+
+    // Dodge
+    let dodgePoints = Math.floor(dex / 2);
+    skills.push({ name: 'Dodge', points: dodgePoints });
+
+    // Own Language
+    skills.push({ name: 'Language (Own)', points: edu });
+
+    return skills;
   }
   // end various functions
 
