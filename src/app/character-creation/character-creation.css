@@ -13,12 +13,6 @@ form {
   margin-top: 8px;
 }
 
-.occupation-row .name {
-  flex: 1 1 0;
-  min-width: 280px;
-  width: 100%;
-}
-
 /* Fixed-per-row item widths */
 .full { flex: 1 1 100%; }
 .col-2 { flex: 1 1 calc((100% - var(--gap)) / 2); }
@@ -50,6 +44,11 @@ form {
   margin-bottom: var(--gap);
 }
 
+.skill-button {
+  margin-bottom: 20px;
+  align-self: center;
+}
+
 .step-actions {
   display: flex;
   justify-content: space-between;
@@ -57,12 +56,12 @@ form {
 }
 
 /* Responsive: stack columns on narrow screens */
-@media (max-width: 900px){
+@media (max-width: 500px){
   .info-field {
     flex: 1 1 100%;
   }
   
   .char-stat {
-    flex: 1 1 calc((100% - var(--gap)) / 2); /* 2 per row */
+    flex: 1 1 calc((100% - var(--gap)) / 2);
   }
 }

@@ -87,27 +87,27 @@
           <input matInput type="number" min="0" formControlName="personalInterestPoints" readonly/>
         </mat-form-field>
 
-        <div class="skills-form full" formArrayName="skills">
+        <div class="full" formArrayName="skills">
           @for (skill of skills.controls; let i = $index; track skill) {
             <div class="row" [formGroupName]="i">
               <!-- Is Professional Skill -->
-              <mat-checkbox formControlName="isProfessional" matTooltip="Professional Skill"></mat-checkbox>
+              <mat-checkbox formControlName="isProfessional" matTooltip="Professional Skill" class="skill-button"></mat-checkbox>
 
               <!-- Name -->
-              <mat-form-field appearance="outline" class = "col-2">
+              <mat-form-field appearance="outline" class="col-2">
                 <mat-label>Skill Name</mat-label>
                 <input matInput formControlName="name"/>
               </mat-form-field>
 
               <!-- Points -->
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" class="col-5">
                 <mat-label>Points</mat-label>
                 <input matInput type="number" min="0" formControlName="points" />
               </mat-form-field>
 
               <!-- Remove (disabled for locked) -->
               <button mat-icon-button color="warn" aria-label="Remove skill" matTooltip="Remove"
-                      type="button" (click)="removeSkill(i)">
+                      type="button" class="skill-button" (click)="removeSkill(i)">
                 <mat-icon>close</mat-icon>
               </button>
             </div>
