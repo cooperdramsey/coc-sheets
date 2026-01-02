@@ -1,70 +1,68 @@
+:host {
+  --gap: 12px;
+}
+
 .cc {
   max-width: 900px;
   margin: 24px auto;
   padding: 8px;
 }
 
-.grid {
-  display: grid;
-  gap: 12px;
-}
-.grid-4 {
-  grid-template-columns: repeat(4, minmax(140px, 1fr));
-}
-.full {
-  grid-column: 1 / -1;
-}
-
+/* Keep some breathing room for forms */
 form {
   margin-top: 8px;
 }
 
-.occupation-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
 .occupation-row .name {
   flex: 1 1 0;
-  min-width: 0;
+  min-width: 280px;
   width: 100%;
 }
 
-.skills-form {
+/* Fixed-per-row item widths */
+.full { flex: 1 1 100%; }
+.col-2 { flex: 1 1 calc((100% - var(--gap)) / 2); }
+.col-3 { flex: 1 1 calc((100% - 2 * var(--gap)) / 3); }
+.col-4 { flex: 1 1 calc((100% - 3 * var(--gap)) / 4); }
+.col-5 { flex: 1 1 calc((100% - 4 * var(--gap)) / 5); }
+.short { flex-grow: 0; }
+
+.row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  align-items: stretch;
 }
 
-.skills-row {
+.info-field {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
+  min-width: fit-content;
 }
 
-.skills-row .name {
-  flex: 1 1 0;
-  min-width: 0;
-  width: 100%;
+.char-stat {
+  display: flex;
+  min-width: fit-content;
 }
 
-.skills-row .points {
-  flex: 0 0 110px;
-}
-
-.skill-checkbox {
-  margin-bottom: 20px;
-}
-
-.skill-remove-button {
-  margin-bottom: 20px;
+.age-hint {
+  font-size: 0.9em;
+  opacity: 0.8;
+  margin-bottom: var(--gap);
 }
 
 .step-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
+}
+
+/* Responsive: stack columns on narrow screens */
+@media (max-width: 900px){
+  .info-field {
+    flex: 1 1 100%;
+  }
+  
+  .char-stat {
+    flex: 1 1 calc((100% - var(--gap)) / 2); /* 2 per row */
+  }
 }

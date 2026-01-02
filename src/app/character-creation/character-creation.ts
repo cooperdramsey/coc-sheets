@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
+import { MatCardModule } from "@angular/material/card";
 
 @Component({
   selector: 'app-character-creation',
@@ -21,8 +22,9 @@ import { InvestigatorCharacteristics } from '../enums/investigator-characteristi
     MatIconModule,
     MatChipsModule,
     MatTooltipModule,
-    MatCheckboxModule
-  ],
+    MatCheckboxModule,
+    MatCardModule
+],
   templateUrl: './character-creation.html',
   styleUrl: './character-creation.css',
 })
@@ -155,7 +157,7 @@ export class CharacterCreation {
   wealthForm = this.fb.group({
       creditRating: [0],
       spendingLevel: [0],
-      cash: [''],
+      cash: [0],
       assets: [''],
     });
 
@@ -222,6 +224,7 @@ export class CharacterCreation {
   }
 
   removeSkill(index: number): void {
+    if (index < 0 || index >= this.skills.length) return;
     this.skills.removeAt(index);
   }
   // end skill helpers
