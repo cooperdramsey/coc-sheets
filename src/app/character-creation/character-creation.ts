@@ -10,6 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
 import { MatCardModule } from "@angular/material/card";
+import { DiceService } from '../Services/dice.service';
 
 @Component({
   selector: 'app-character-creation',
@@ -30,22 +31,23 @@ import { MatCardModule } from "@angular/material/card";
 })
 export class CharacterCreation {
   private fb = inject(FormBuilder);
+  private dice = inject(DiceService);
 
   // TODO pull rules like this into services
   private AGE_RULES = [
-    { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5, 
+    { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.SIZE], appReduction: 0, eduImprovements: 0},
-    { key: '20s or 30s',  label: '20-39', min: 20, max: 39, penalty: 0, 
+    { key: '20s or 30s',  label: '20-39', min: 20, max: 39, penalty: 0,
       characteristics: [], appReduction: 0, eduImprovements: 1},
-    { key: '40s', label: '40-49', min: 40, max: 49, penalty: 5, 
+    { key: '40s', label: '40-49', min: 40, max: 49, penalty: 5,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 5, eduImprovements: 2},
-    { key: '50s',  label: '50-59', min: 50, max: 59, penalty: 10, 
+    { key: '50s',  label: '50-59', min: 50, max: 59, penalty: 10,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 10, eduImprovements: 3},
-    { key: '60s', label: '60-69', min: 60, max: 69, penalty: 20, 
+    { key: '60s', label: '60-69', min: 60, max: 69, penalty: 20,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 15, eduImprovements: 4},
-    { key: '70s',  label: '70-79', min: 70, max: 79, penalty: 40, 
+    { key: '70s',  label: '70-79', min: 70, max: 79, penalty: 40,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 20, eduImprovements: 4},
-    { key: '80+',label: '80+',   min: 80, max: 120, penalty: 80, 
+    { key: '80+',label: '80+',   min: 80, max: 120, penalty: 80,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 25, eduImprovements: 4}
   ];
 
@@ -356,6 +358,38 @@ export class CharacterCreation {
       { occupationPoints: occ, personalInterestPoints: pi },
       { emitEvent: false }
     );
+  }
+
+  // Dice helpers
+  private rollNd6(n: number): number {
+    const rolls = this.dice.rollMany([{ sides: 6, count: n }]);
+    return rolls.reduce((sum, r) => sum + r.result, 0);
+  }
+
+  private roll3d6x5(): number {
+    return this.rollNd6(3) * 5;
+  }
+
+  private roll2d6plus6(): number {
+    return this.rollNd6(2) + 6;
+  }
+
+  rollStat(stat: 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck'): void {
+    const isThreeD6x5 = ['str', 'con', 'dex', 'app', 'pow', 'luck'].includes(stat);
+    const value = isThreeD6x5 ? this.roll3d6x5() : this.roll2d6plus6();
+    this.characteristicsForm.get(stat)?.setValue(value);
+  }
+
+  rollAllStats(): void {
+    this.rollStat('str');
+    this.rollStat('con');
+    this.rollStat('siz');
+    this.rollStat('dex');
+    this.rollStat('app');
+    this.rollStat('int');
+    this.rollStat('pow');
+    this.rollStat('edu');
+    this.rollStat('luck'); // TODO: teen band advantage
   }
 
   finish(): void {
