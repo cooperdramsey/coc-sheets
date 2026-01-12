@@ -53,6 +53,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('str')" aria-label="Roll STR">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.str }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -61,6 +62,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('con')" aria-label="Roll CON">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.con }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -69,6 +71,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('siz')" aria-label="Roll SIZ">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.siz }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -77,6 +80,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('dex')" aria-label="Roll DEX">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.dex }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -85,6 +89,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('app')" aria-label="Roll APP">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.app }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -93,6 +98,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('int')" aria-label="Roll INT">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.int }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -101,6 +107,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('pow')" aria-label="Roll POW">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.pow }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
@@ -109,6 +116,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('edu')" aria-label="Roll EDU">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.edu }}</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full">
@@ -128,6 +136,7 @@
           <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('luck')" aria-label="Roll LUCK">
             <mat-icon>casino</mat-icon>
           </button>
+          <mat-hint align="end">{{ rollNotes.luck }}</mat-hint>
         </mat-form-field>
 
         <div class="step-actions full">

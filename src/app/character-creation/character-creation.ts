@@ -10,7 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
 import { MatCardModule } from "@angular/material/card";
-import { DiceService } from '../Services/dice.service';
+import { DiceRoll, DiceService } from '../Services/dice.service';
 
 @Component({
   selector: 'app-character-creation',
@@ -32,6 +32,8 @@ import { DiceService } from '../Services/dice.service';
 export class CharacterCreation {
   private fb = inject(FormBuilder);
   private dice = inject(DiceService);
+
+  rollNotes: Partial<Record<'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck', string>> = {};
 
   // TODO pull rules like this into services
   private AGE_RULES = [
@@ -361,23 +363,30 @@ export class CharacterCreation {
   }
 
   // Dice helpers
-  private rollNd6(n: number): number {
+   private rollNd6(n: number): number[] {
     const rolls = this.dice.rollMany([{ sides: 6, count: n }]);
-    return rolls.reduce((sum, r) => sum + r.result, 0);
+    return rolls.map(r => r.result);
   }
 
-  private roll3d6x5(): number {
-    return this.rollNd6(3) * 5;
+  private roll3d6x5WithMessage(): { value: number;} {
+    const dice = this.rollNd6(3);
+    const base = dice.reduce((s, v) => s + v, 0);
+    const value = base * 5;
+    return { value };
   }
 
-  private roll2d6plus6(): number {
-    return this.rollNd6(2) + 6;
+  private roll2d6plus6WithMessage(): { value: number;} {
+    const dice = this.rollNd6(2);
+    const base = dice.reduce((s, v) => s + v, 0);
+    const value = (base + 6) * 5;
+    return { value };
   }
 
   rollStat(stat: 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck'): void {
-    const isThreeD6x5 = ['str', 'con', 'dex', 'app', 'pow', 'luck'].includes(stat);
-    const value = isThreeD6x5 ? this.roll3d6x5() : this.roll2d6plus6();
+    const is3d6x5 = ['str', 'con', 'dex', 'app', 'pow'].includes(stat);
+    const { value } = is3d6x5 ? this.roll3d6x5WithMessage() : this.roll2d6plus6WithMessage();
     this.characteristicsForm.get(stat)?.setValue(value);
+    this.rollNotes[stat] = 'Rolled ' + value;
   }
 
   rollAllStats(): void {
@@ -389,7 +398,7 @@ export class CharacterCreation {
     this.rollStat('int');
     this.rollStat('pow');
     this.rollStat('edu');
-    this.rollStat('luck'); // TODO: teen band advantage
+    this.rollStat('luck');
   }
 
   finish(): void {
