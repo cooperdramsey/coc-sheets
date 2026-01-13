@@ -10,7 +10,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
 import { MatCardModule } from "@angular/material/card";
-import { CharacterCreationService } from '../Services/character-creation.service';
+import { CharacteristicsService } from '../Services/characteristics.service';
+import { AgeService } from '../Services/age.service';
 
 @Component({
   selector: 'app-character-creation',
@@ -31,26 +32,10 @@ import { CharacterCreationService } from '../Services/character-creation.service
 })
 export class CharacterCreation {
   private fb = inject(FormBuilder);
-  private characterCreationService = inject(CharacterCreationService);
+  private characteristicsService = inject(CharacteristicsService);
+  private ageService = inject(AgeService);
 
   rollNotes: Partial<Record<'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck', string>> = {};
-
-  private AGE_RULES = [
-    { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.SIZE], appReduction: 0, eduImprovements: 0},
-    { key: '20s or 30s',  label: '20-39', min: 20, max: 39, penalty: 0,
-      characteristics: [], appReduction: 0, eduImprovements: 1},
-    { key: '40s', label: '40-49', min: 40, max: 49, penalty: 5,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 5, eduImprovements: 2},
-    { key: '50s',  label: '50-59', min: 50, max: 59, penalty: 10,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 10, eduImprovements: 3},
-    { key: '60s', label: '60-69', min: 60, max: 69, penalty: 20,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 15, eduImprovements: 4},
-    { key: '70s',  label: '70-79', min: 70, max: 79, penalty: 40,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 20, eduImprovements: 4},
-    { key: '80+',label: '80+',   min: 80, max: 120, penalty: 80,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 25, eduImprovements: 4}
-  ];
 
   // TODO move into service or configuration
   private DAMAGE_BUILD_TABLE = [
@@ -169,47 +154,14 @@ export class CharacterCreation {
   }
 
   // Age helpers
-  private getAgeBand(age: number) {
-    return this.AGE_RULES.find(r => age >= r.min && age <= r.max);
-  }
-
   get currentAgeBand() {
     const age = this.characteristicsForm.get('age')?.value ?? 15;
-    return this.getAgeBand(Number(age));
+    return this.ageService.getAgeBand(Number(age));
   }
 
   get ageAdvice(): string {
-    const band = this.currentAgeBand;
-    if (!band) return 'Select an age between 15 and 120.';
-    var message = "";
-    if (band.key == 'teen'){
-      message += 'Deduct 5 points from STR or SIZ, and also from EDU. Roll twice for Luck and use the higher value.';
-    } else {
-      if (band.penalty > 0) {
-        message += `Deduct ${band.penalty} points from `;
-        const chars = band.characteristics;
-        if (chars.length === 1) {
-          message += chars[0];
-        } else if (chars.length > 1) {
-          const last = chars[chars.length - 1];
-          const leading = chars.slice(0, -1).join(', ');
-          message += `${leading}, or ${last} split in any way.`;
-        }
-      }
-
-      if (band.appReduction > 0){
-        message += ` Reduce APP by ${band.appReduction} points.`;
-      }
-
-      if (band.eduImprovements > 0){
-        if (band.eduImprovements === 1){
-          message += ` Make an improvement check for EDU.`;
-        } else {
-          message += ` Make ${band.eduImprovements} improvement checks for EDU.`;
-        }
-      }
-    }
-    return message;
+    const age = Number(this.characteristicsForm.get('age')?.value ?? 15);
+    return this.ageService.getAgeAdvice(age);
   }
   // end age helpers
 
@@ -253,38 +205,14 @@ export class CharacterCreation {
     const str = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.STRENGTH);
     const dex = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.DEXTERITY);
     const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
-    const ageBand = this.currentAgeBand;
-    var move = 0;
-    if (str < siz && dex < siz) {
-      move = 7;
-    }
 
-    if (str >= siz || dex >= siz || str === siz && dex === siz) {
-      move = 8;
-    }
+    let move = 0;
+    if (str < siz && dex < siz) move = 7;
+    if (str >= siz || dex >= siz || (str === siz && dex === siz)) move = 8;
+    if (str > siz && dex > siz) move = 9;
 
-    if (str > siz && dex > siz) {
-      move = 9;
-    }
-
-    // adjust for age penalties
-    switch (ageBand?.key) {
-      case '40s':
-        move -= 1;
-        break;
-      case '50s':
-        move -= 2;
-        break;
-      case '60s':
-        move -= 3;
-        break;
-      case '70s':
-        move -= 4;
-        break;
-      case '80+':
-        move -= 5;
-        break;
-    }
+    const age = Number(this.characteristicsForm.get('age')?.value ?? 15);
+    move += this.ageService.getMovePenalty(age);
 
     return move;
   }
@@ -363,7 +291,7 @@ export class CharacterCreation {
 
   // Dice helpers
   rollStat(stat: 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck'): void {
-    const { value } = this.characterCreationService.rollStat(stat);
+    const { value } = this.characteristicsService.rollStat(stat);
     this.characteristicsForm.get(stat)?.setValue(value);
     this.rollNotes[stat] = 'Rolled ' + value;
   }

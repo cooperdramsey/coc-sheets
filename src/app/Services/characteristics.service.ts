@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { DiceService, DiceGroup } from '../Services/dice.service';
+import { DiceService, DiceGroup } from './dice.service';
 
 // Narrow stat type used in character creation
 export type Stat = 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck';
 
 @Injectable({ providedIn: 'root' })
-export class CharacterCreationService {
+export class CharacteristicsService {
   private dice = inject(DiceService);
 
   // Map stat to its roll formula; keep as config later if desired
