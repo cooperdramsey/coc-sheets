@@ -11,7 +11,6 @@ import { MatBadgeModule } from '@angular/material/badge';
   styleUrl: './dice.css',
 })
 export class Dice {
-  lastRoll?: DiceRoll;
   historyView: DiceGroup[] = [];
   menuOpen = false;
   diceOptions: number[] = [2, 4, 6, 10, 12, 20, 100];
@@ -40,12 +39,6 @@ export class Dice {
     }
   }
 
-  rollDice(sides: number = 100) {
-    this.lastRoll = this.diceService.rollInstant(sides);
-    this.refreshHistory();
-    this.menuOpen = false;
-  }
-
   addDie(sides: number) {
     this.selectedCounts[sides] = (this.selectedCounts[sides] ?? 0) + 1;
   }
@@ -61,8 +54,7 @@ export class Dice {
   }
 
   private rollSelection(requests: Array<{ sides: number; count: number }>) {
-    const rolls = this.diceService.rollMany(requests);
-    this.lastRoll = rolls[rolls.length - 1];
+    const group = this.diceService.rollGroup(requests);
     this.refreshHistory();
     this.selectedCounts = {};
     this.menuOpen = false;

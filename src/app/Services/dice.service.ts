@@ -16,23 +16,14 @@ export interface DiceGroup {
 
 @Injectable({ providedIn: 'root' })
 export class DiceService {
-  private history: DiceRoll[] = [];
   private groupHistory: DiceGroup[] = [];
   private readonly maxGroups = 5;
 
-  rollInstant(sides: number): DiceRoll {
-    const result = Math.floor(Math.random() * sides) + 1;
-    const timestamp = Date.now();
-
-    const roll: DiceRoll = { sides, result, timestamp };
-    this.history.push(roll);
-
-    this.addGroup([{ sides, count: 1 }], [roll], timestamp);
-    return roll;
-  }
-
-  // Roll multiple dice at once and push each to history.
-  rollMany(requests: Array<{ sides: number; count: number }>): DiceRoll[] {
+  /**
+   * Roll multiple dice and return the grouped result with total and expression.
+   * Also records the group in internal history.
+   */
+  rollGroup(requests: Array<{ sides: number; count: number }>): DiceGroup {
     const rolls: DiceRoll[] = [];
     const groupTimestamp = Date.now();
 
@@ -40,28 +31,24 @@ export class DiceService {
       for (let i = 0; i < req.count; i++) {
         const result = Math.floor(Math.random() * req.sides) + 1;
         const roll: DiceRoll = { sides: req.sides, result, timestamp: groupTimestamp };
-        this.history.push(roll);
         rolls.push(roll);
       }
     }
 
-    this.addGroup(requests, rolls, groupTimestamp);
-    return rolls;
+    const group = this.addGroup(requests, rolls, groupTimestamp);
+    return group;
   }
 
   private addGroup(
     requests: Array<{ sides: number; count: number }>,
     rolls: DiceRoll[],
     timestamp: number
-  ) {
+  ): DiceGroup {
     const total = rolls.reduce((a, r) => a + r.result, 0);
     const expression = requests.map(r => `${r.count}d${r.sides}`).join(' + ');
     const group: DiceGroup = { total, expression, timestamp, rolls };
     this.groupHistory = [...this.groupHistory, group].slice(-this.maxGroups);
-  }
-
-  getHistory(): DiceRoll[] {
-    return [...this.history];
+    return group;
   }
 
   getGroupHistory(): DiceGroup[] {
@@ -69,7 +56,6 @@ export class DiceService {
   }
 
   clearHistory() {
-    this.history = [];
     this.groupHistory = [];
   }
 }

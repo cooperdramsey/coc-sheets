@@ -10,7 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
 import { MatCardModule } from "@angular/material/card";
-import { DiceRoll, DiceService } from '../Services/dice.service';
+import { CharacterCreationService } from '../Services/character-creation.service';
 
 @Component({
   selector: 'app-character-creation',
@@ -31,11 +31,10 @@ import { DiceRoll, DiceService } from '../Services/dice.service';
 })
 export class CharacterCreation {
   private fb = inject(FormBuilder);
-  private dice = inject(DiceService);
+  private characterCreationService = inject(CharacterCreationService);
 
   rollNotes: Partial<Record<'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck', string>> = {};
 
-  // TODO pull rules like this into services
   private AGE_RULES = [
     { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5,
       characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.SIZE], appReduction: 0, eduImprovements: 0},
@@ -363,28 +362,8 @@ export class CharacterCreation {
   }
 
   // Dice helpers
-   private rollNd6(n: number): number[] {
-    const rolls = this.dice.rollMany([{ sides: 6, count: n }]);
-    return rolls.map(r => r.result);
-  }
-
-  private roll3d6x5WithMessage(): { value: number;} {
-    const dice = this.rollNd6(3);
-    const base = dice.reduce((s, v) => s + v, 0);
-    const value = base * 5;
-    return { value };
-  }
-
-  private roll2d6plus6WithMessage(): { value: number;} {
-    const dice = this.rollNd6(2);
-    const base = dice.reduce((s, v) => s + v, 0);
-    const value = (base + 6) * 5;
-    return { value };
-  }
-
   rollStat(stat: 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck'): void {
-    const is3d6x5 = ['str', 'con', 'dex', 'app', 'pow'].includes(stat);
-    const { value } = is3d6x5 ? this.roll3d6x5WithMessage() : this.roll2d6plus6WithMessage();
+    const { value } = this.characterCreationService.rollStat(stat);
     this.characteristicsForm.get(stat)?.setValue(value);
     this.rollNotes[stat] = 'Rolled ' + value;
   }
