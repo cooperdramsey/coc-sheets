@@ -44,6 +44,16 @@ form {
   margin-bottom: var(--gap);
 }
 
+.delta {
+  font-weight: 500;
+}
+.delta.positive {
+  color: #2e7d32; /* green 800-ish */
+}
+.delta.negative {
+  color: #c62828; /* red 800-ish */
+}
+
 .skill-button {
   margin-bottom: 20px;
   align-self: center;
@@ -60,7 +70,7 @@ form {
   .info-field {
     flex: 1 1 100%;
   }
-  
+
   .char-stat {
     flex: 1 1 calc((100% - var(--gap)) / 2);
   }

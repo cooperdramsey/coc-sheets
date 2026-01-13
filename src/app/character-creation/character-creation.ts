@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
+import { InvestigatorStats } from '../enums/investigator-stats';
 import { MatCardModule } from "@angular/material/card";
 import { CharacteristicsService } from '../Services/characteristics.service';
 import { AgeService } from '../Services/age.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-character-creation',
@@ -25,7 +26,8 @@ import { AgeService } from '../Services/age.service';
     MatChipsModule,
     MatTooltipModule,
     MatCheckboxModule,
-    MatCardModule
+    MatCardModule,
+    CommonModule
 ],
   templateUrl: './character-creation.html',
   styleUrl: './character-creation.css',
@@ -35,7 +37,22 @@ export class CharacterCreation {
   private characteristicsService = inject(CharacteristicsService);
   private ageService = inject(AgeService);
 
-  rollNotes: Partial<Record<'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck', string>> = {};
+  rolledValues: Partial<Record<InvestigatorStats, number>> = {};
+  rollNotes: Partial<Record<InvestigatorStats, string>> = {};
+
+  public readonly Stats = InvestigatorStats;
+  private readonly controlByStat: Record<InvestigatorStats, 'str' | 'con' | 'siz' | 'dex' | 'app' | 'int' | 'pow' | 'edu' | 'luck' | 'age'> = {
+    [InvestigatorStats.STRENGTH]: 'str',
+    [InvestigatorStats.CONSTITUTION]: 'con',
+    [InvestigatorStats.SIZE]: 'siz',
+    [InvestigatorStats.DEXTERITY]: 'dex',
+    [InvestigatorStats.APPEARANCE]: 'app',
+    [InvestigatorStats.INTELLIGENCE]: 'int',
+    [InvestigatorStats.POWER]: 'pow',
+    [InvestigatorStats.EDUCATION]: 'edu',
+    [InvestigatorStats.LUCK]: 'luck',
+    [InvestigatorStats.AGE]: 'age'
+  };
 
   // TODO move into service or configuration
   private DAMAGE_BUILD_TABLE = [
@@ -155,12 +172,14 @@ export class CharacterCreation {
 
   // Age helpers
   get currentAgeBand() {
-    const age = this.characteristicsForm.get('age')?.value ?? 15;
+    const control = this.controlByStat[InvestigatorStats.AGE];
+    const age = this.characteristicsForm.get(control)?.value ?? 15;
     return this.ageService.getAgeBand(Number(age));
   }
 
   get ageAdvice(): string {
-    const age = Number(this.characteristicsForm.get('age')?.value ?? 15);
+    const control = this.controlByStat[InvestigatorStats.AGE];
+    const age = Number(this.characteristicsForm.get(control)?.value ?? 15);
     return this.ageService.getAgeAdvice(age);
   }
   // end age helpers
@@ -186,25 +205,26 @@ export class CharacterCreation {
 
   // TODO various functions for computing rules stuff and derived values
   calculateHitPoints(): number {
-    const con = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.CONSTITUTION);
-    const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
+
+    const con = this.getStatValueFromForm(InvestigatorStats.CONSTITUTION);
+    const siz = this.getStatValueFromForm(InvestigatorStats.SIZE);
     return Math.floor((con + siz) / 10);
   }
 
   calculateSanityPoints(): number {
-    const pow = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.POWER);
+    const pow = this.getStatValueFromForm(InvestigatorStats.POWER);
     return pow;
   }
 
   calculateMagicPoints(): number {
-    const pow = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.POWER);
+    const pow = this.getStatValueFromForm(InvestigatorStats.POWER);
     return Math.floor(pow / 5);
   }
 
   calculateMoveRate(): number {
-    const str = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.STRENGTH);
-    const dex = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.DEXTERITY);
-    const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
+    const str = this.getStatValueFromForm(InvestigatorStats.STRENGTH);
+    const dex = this.getStatValueFromForm(InvestigatorStats.DEXTERITY);
+    const siz = this.getStatValueFromForm(InvestigatorStats.SIZE);
 
     let move = 0;
     if (str < siz && dex < siz) move = 7;
@@ -218,8 +238,8 @@ export class CharacterCreation {
   }
 
   calculateDamageBuildDodgeValues(): { damage: string; build: number } {
-    const str = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.STRENGTH);
-    const siz = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.SIZE);
+    const str = this.getStatValueFromForm(InvestigatorStats.STRENGTH);
+    const siz = this.getStatValueFromForm(InvestigatorStats.SIZE);
     const total = str + siz;
     var lookup = this.DAMAGE_BUILD_TABLE.find(r => total >= r.min && total <= r.max);
     let damage = lookup ? lookup.damage : '';
@@ -228,8 +248,8 @@ export class CharacterCreation {
   }
 
   calculateDerivedSkills(): any {
-    const dex = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.DEXTERITY);
-    const edu = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.EDUCATION);
+    const dex = this.getStatValueFromForm(InvestigatorStats.DEXTERITY);
+    const edu = this.getStatValueFromForm(InvestigatorStats.EDUCATION);
     var skills = [];
 
     // Cthulhu Mythos
@@ -245,36 +265,40 @@ export class CharacterCreation {
     return skills;
   }
 
-  calculateOccupationSkillPoints(additionalCharacteristic: InvestigatorCharacteristics = InvestigatorCharacteristics.EDUCATION): number {
-    const edu = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.EDUCATION);
-    const additional = this.getCharacteristicValueFromForm(additionalCharacteristic);
+  calculateOccupationSkillPoints(additionalCharacteristic: InvestigatorStats = InvestigatorStats.EDUCATION): number {
+    const edu = this.getStatValueFromForm(InvestigatorStats.EDUCATION);
+    const additional = this.getStatValueFromForm(additionalCharacteristic);
     return (edu * 2) + (additional * 2);
   }
 
   calculatePersonalInterestSkillPoints(): number {
-    const int = this.getCharacteristicValueFromForm(InvestigatorCharacteristics.INTELLIGENCE);
+    const int = this.getStatValueFromForm(InvestigatorStats.INTELLIGENCE);
     return int * 2;
   }
   // end various functions
 
-  private getCharacteristicValueFromForm(characterisitc: InvestigatorCharacteristics): number {
+  private getStatValueFromForm(characterisitc: InvestigatorStats): number {
     switch (characterisitc) {
-      case InvestigatorCharacteristics.STRENGTH:
+      case InvestigatorStats.STRENGTH:
         return this.characteristicsForm.get('str')?.value ?? 0;
-      case InvestigatorCharacteristics.CONSTITUTION:
+      case InvestigatorStats.CONSTITUTION:
         return this.characteristicsForm.get('con')?.value ?? 0;
-      case InvestigatorCharacteristics.SIZE:
+      case InvestigatorStats.SIZE:
         return this.characteristicsForm.get('siz')?.value ?? 0;
-      case InvestigatorCharacteristics.DEXTERITY:
+      case InvestigatorStats.DEXTERITY:
         return this.characteristicsForm.get('dex')?.value ?? 0;
-      case InvestigatorCharacteristics.APPEARANCE:
+      case InvestigatorStats.APPEARANCE:
         return this.characteristicsForm.get('app')?.value ?? 0;
-      case InvestigatorCharacteristics.INTELLIGENCE:
+      case InvestigatorStats.INTELLIGENCE:
         return this.characteristicsForm.get('int')?.value ?? 0;
-      case InvestigatorCharacteristics.POWER:
+      case InvestigatorStats.POWER:
         return this.characteristicsForm.get('pow')?.value ?? 0;
-      case InvestigatorCharacteristics.EDUCATION:
+      case InvestigatorStats.EDUCATION:
         return this.characteristicsForm.get('edu')?.value ?? 0;
+      case InvestigatorStats.LUCK:
+        return this.characteristicsForm.get('luck')?.value ?? 0;
+      case InvestigatorStats.AGE:
+        return this.characteristicsForm.get('age')?.value ?? 0;
       default:
         return 0;
     }
@@ -290,23 +314,59 @@ export class CharacterCreation {
   }
 
   // Dice helpers
-  rollStat(stat: 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck'): void {
+  rollStat(stat: InvestigatorStats): void {
     const { value } = this.characteristicsService.rollStat(stat);
-    this.characteristicsForm.get(stat)?.setValue(value);
-    this.rollNotes[stat] = 'Rolled ' + value;
+    const control = this.controlByStat[stat];
+    this.characteristicsForm.get(control)?.setValue(value);
+    this.rolledValues[stat] = value;
+    this.rollNotes[stat] = `Rolled ${value}`;
+  }
+
+  getRolledValue(stat: InvestigatorStats): number | null {
+    const v = this.rolledValues[stat];
+    return typeof v === 'number' ? v : null;
+  }
+
+  private getCurrentValue(stat: InvestigatorStats): number {
+    const control = this.controlByStat[stat];
+    return Number(this.characteristicsForm.get(control)?.value ?? 0);
+  }
+
+  getDelta(stat: InvestigatorStats): number | null {
+    const rolled = this.getRolledValue(stat);
+    if (rolled === null) return null;
+    return this.getCurrentValue(stat) - rolled;
+  }
+
+  hasDelta(stat: InvestigatorStats): boolean {
+    const d = this.getDelta(stat);
+    return d !== null && d !== 0;
+  }
+
+  formatDelta(stat: InvestigatorStats): string {
+    const d = this.getDelta(stat);
+    if (d === null || d === 0) return '';
+    return d > 0 ? `+${d}` : `${d}`;
+  }
+
+  getDeltaClass(stat: InvestigatorStats): string {
+    const d = this.getDelta(stat);
+    if (d === null || d === 0) return '';
+    return d > 0 ? 'delta positive' : 'delta negative';
   }
 
   rollAllStats(): void {
-    this.rollStat('str');
-    this.rollStat('con');
-    this.rollStat('siz');
-    this.rollStat('dex');
-    this.rollStat('app');
-    this.rollStat('int');
-    this.rollStat('pow');
-    this.rollStat('edu');
-    this.rollStat('luck');
+    this.rollStat(InvestigatorStats.STRENGTH);
+    this.rollStat(InvestigatorStats.CONSTITUTION);
+    this.rollStat(InvestigatorStats.SIZE);
+    this.rollStat(InvestigatorStats.DEXTERITY);
+    this.rollStat(InvestigatorStats.APPEARANCE);
+    this.rollStat(InvestigatorStats.INTELLIGENCE);
+    this.rollStat(InvestigatorStats.POWER);
+    this.rollStat(InvestigatorStats.EDUCATION);
+    this.rollStat(InvestigatorStats.LUCK);
   }
+  // end Dice helpers
 
   finish(): void {
     const result = {

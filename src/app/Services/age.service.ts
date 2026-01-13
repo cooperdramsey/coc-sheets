@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { InvestigatorCharacteristics } from '../enums/investigator-characteristics';
+import { InvestigatorStats } from '../enums/investigator-stats';
 
 export interface AgeBand {
   key: 'teen' | '20s or 30s' | '40s' | '50s' | '60s' | '70s' | '80+';
@@ -7,7 +7,7 @@ export interface AgeBand {
   min: number;
   max: number;
   penalty: number;
-  characteristics: InvestigatorCharacteristics[];
+  characteristics: InvestigatorStats[];
   appReduction: number;
   eduImprovements: number;
 }
@@ -16,19 +16,19 @@ export interface AgeBand {
 export class AgeService {
   private readonly AGE_RULES: AgeBand[] = [
     { key: 'teen',   label: '15-19', min: 15, max: 19, penalty: 5,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.SIZE], appReduction: 0, eduImprovements: 0},
+      characteristics: [InvestigatorStats.STRENGTH, InvestigatorStats.SIZE], appReduction: 0, eduImprovements: 0},
     { key: '20s or 30s',  label: '20-39', min: 20, max: 39, penalty: 0,
       characteristics: [], appReduction: 0, eduImprovements: 1},
     { key: '40s', label: '40-49', min: 40, max: 49, penalty: 5,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 5, eduImprovements: 2},
+      characteristics: [InvestigatorStats.STRENGTH, InvestigatorStats.CONSTITUTION, InvestigatorStats.DEXTERITY], appReduction: 5, eduImprovements: 2},
     { key: '50s',  label: '50-59', min: 50, max: 59, penalty: 10,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 10, eduImprovements: 3},
+      characteristics: [InvestigatorStats.STRENGTH, InvestigatorStats.CONSTITUTION, InvestigatorStats.DEXTERITY], appReduction: 10, eduImprovements: 3},
     { key: '60s', label: '60-69', min: 60, max: 69, penalty: 20,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 15, eduImprovements: 4},
+      characteristics: [InvestigatorStats.STRENGTH, InvestigatorStats.CONSTITUTION, InvestigatorStats.DEXTERITY], appReduction: 15, eduImprovements: 4},
     { key: '70s',  label: '70-79', min: 70, max: 79, penalty: 40,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 20, eduImprovements: 4},
+      characteristics: [InvestigatorStats.STRENGTH, InvestigatorStats.CONSTITUTION, InvestigatorStats.DEXTERITY], appReduction: 20, eduImprovements: 4},
     { key: '80+',label: '80+',   min: 80, max: 120, penalty: 80,
-      characteristics: [InvestigatorCharacteristics.STRENGTH, InvestigatorCharacteristics.CONSTITUTION, InvestigatorCharacteristics.DEXTERITY], appReduction: 25, eduImprovements: 4}
+      characteristics: [InvestigatorStats.STRENGTH, InvestigatorStats.CONSTITUTION, InvestigatorStats.DEXTERITY], appReduction: 25, eduImprovements: 4}
   ];
 
   getAgeBand(age: number): AgeBand | undefined {

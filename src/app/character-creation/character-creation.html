@@ -50,73 +50,129 @@
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>STR</mat-label>
           <input matInput type="number" formControlName="str" />
-          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('str')" aria-label="Roll STR">
+          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat(Stats.STRENGTH)" aria-label="Roll STR">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.str }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.STRENGTH) !== null) {
+              Rolled {{ getRolledValue(Stats.STRENGTH) }}
+              @if (hasDelta(Stats.STRENGTH)) {
+                <span [ngClass]="getDeltaClass(Stats.STRENGTH)">({{ formatDelta(Stats.STRENGTH) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>CON</mat-label>
           <input matInput type="number" formControlName="con" />
-          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('con')" aria-label="Roll CON">
+          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat(Stats.CONSTITUTION)" aria-label="Roll CON">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.con }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.CONSTITUTION) !== null) {
+              Rolled {{ getRolledValue(Stats.CONSTITUTION) }}
+              @if (hasDelta(Stats.CONSTITUTION)) {
+                <span [ngClass]="getDeltaClass(Stats.CONSTITUTION)">({{ formatDelta(Stats.CONSTITUTION) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>SIZ</mat-label>
           <input matInput type="number" formControlName="siz" />
-          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('siz')" aria-label="Roll SIZ">
+          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat(Stats.SIZE)" aria-label="Roll SIZ">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.siz }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.SIZE) !== null) {
+              Rolled {{ getRolledValue(Stats.SIZE) }}
+              @if (hasDelta(Stats.SIZE)) {
+                <span [ngClass]="getDeltaClass(Stats.SIZE)">({{ formatDelta(Stats.SIZE) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>DEX</mat-label>
           <input matInput type="number" formControlName="dex" />
-          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('dex')" aria-label="Roll DEX">
+          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat(Stats.DEXTERITY)" aria-label="Roll DEX">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.dex }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.DEXTERITY) !== null) {
+              Rolled {{ getRolledValue(Stats.DEXTERITY) }}
+              @if (hasDelta(Stats.DEXTERITY)) {
+                <span [ngClass]="getDeltaClass(Stats.DEXTERITY)">({{ formatDelta(Stats.DEXTERITY) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>APP</mat-label>
           <input matInput type="number" formControlName="app" />
-          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('app')" aria-label="Roll APP">
+          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat(Stats.APPEARANCE)" aria-label="Roll APP">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.app }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.APPEARANCE) !== null) {
+              Rolled {{ getRolledValue(Stats.APPEARANCE) }}
+              @if (hasDelta(Stats.APPEARANCE)) {
+                <span [ngClass]="getDeltaClass(Stats.APPEARANCE)">({{ formatDelta(Stats.APPEARANCE) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>INT</mat-label>
           <input matInput type="number" formControlName="int" />
-          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('int')" aria-label="Roll INT">
+          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat(Stats.INTELLIGENCE)" aria-label="Roll INT">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.int }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.INTELLIGENCE) !== null) {
+              Rolled {{ getRolledValue(Stats.INTELLIGENCE) }}
+              @if (hasDelta(Stats.INTELLIGENCE)) {
+                <span [ngClass]="getDeltaClass(Stats.INTELLIGENCE)">({{ formatDelta(Stats.INTELLIGENCE) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>POW</mat-label>
           <input matInput type="number" formControlName="pow" />
-          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat('pow')" aria-label="Roll POW">
+          <button mat-icon-button matSuffix matTooltip="Roll 3d6 × 5" (click)="rollStat(Stats.POWER)" aria-label="Roll POW">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.pow }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.POWER) !== null) {
+              Rolled {{ getRolledValue(Stats.POWER) }}
+              @if (hasDelta(Stats.POWER)) {
+                <span [ngClass]="getDeltaClass(Stats.POWER)">({{ formatDelta(Stats.POWER) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>EDU</mat-label>
           <input matInput type="number" formControlName="edu" />
-          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('edu')" aria-label="Roll EDU">
+          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat(Stats.EDUCATION)" aria-label="Roll EDU">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.edu }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.EDUCATION) !== null) {
+              Rolled {{ getRolledValue(Stats.EDUCATION) }}
+              @if (hasDelta(Stats.EDUCATION)) {
+                <span [ngClass]="getDeltaClass(Stats.EDUCATION)">({{ formatDelta(Stats.EDUCATION) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full">
@@ -133,10 +189,17 @@
         <mat-form-field appearance="outline" class="char-stat col-3 short">
           <mat-label>Luck</mat-label>
           <input matInput type="number" formControlName="luck" />
-          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat('luck')" aria-label="Roll LUCK">
+          <button mat-icon-button matSuffix matTooltip="Roll 2d6 + 6" (click)="rollStat(Stats.LUCK)" aria-label="Roll LUCK">
             <mat-icon>casino</mat-icon>
           </button>
-          <mat-hint align="end">{{ rollNotes.luck }}</mat-hint>
+          <mat-hint align="end">
+            @if (getRolledValue(Stats.LUCK) !== null) {
+              Rolled {{ getRolledValue(Stats.LUCK) }}
+              @if (hasDelta(Stats.LUCK)) {
+                <span [ngClass]="getDeltaClass(Stats.LUCK)">({{ formatDelta(Stats.LUCK) }})</span>
+              }
+            }
+          </mat-hint>
         </mat-form-field>
 
         <div class="step-actions full">

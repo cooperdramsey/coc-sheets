@@ -1,27 +1,25 @@
 import { Injectable, inject } from '@angular/core';
 import { DiceService, DiceGroup } from './dice.service';
-
-// Narrow stat type used in character creation
-export type Stat = 'str' | 'con' | 'dex' | 'app' | 'pow' | 'siz' | 'int' | 'edu' | 'luck';
-
+import { InvestigatorStats } from '../enums/investigator-stats';
 @Injectable({ providedIn: 'root' })
 export class CharacteristicsService {
   private dice = inject(DiceService);
 
   // Map stat to its roll formula; keep as config later if desired
-  private readonly formulaByStat: Record<Stat, '3d6x5' | '(2d6+6)x5'> = {
-    str: '3d6x5',
-    con: '3d6x5',
-    dex: '3d6x5',
-    app: '3d6x5',
-    pow: '3d6x5',
-    siz: '(2d6+6)x5',
-    int: '(2d6+6)x5',
-    edu: '(2d6+6)x5',
-    luck: '(2d6+6)x5'
+  private readonly formulaByStat: Record<InvestigatorStats, '3d6x5' | '(2d6+6)x5' | ''> = {
+    [InvestigatorStats.STRENGTH]: '3d6x5',
+    [InvestigatorStats.CONSTITUTION]: '3d6x5',
+    [InvestigatorStats.DEXTERITY]: '3d6x5',
+    [InvestigatorStats.APPEARANCE]: '3d6x5',
+    [InvestigatorStats.POWER]: '3d6x5',
+    [InvestigatorStats.SIZE]: '(2d6+6)x5',
+    [InvestigatorStats.INTELLIGENCE]: '(2d6+6)x5',
+    [InvestigatorStats.EDUCATION]: '(2d6+6)x5',
+    [InvestigatorStats.LUCK]: '(2d6+6)x5',
+    [InvestigatorStats.AGE]: ''
   };
 
-  rollStat(stat: Stat): { value: number; note: string; group: DiceGroup } {
+  rollStat(stat: InvestigatorStats): { value: number; note: string; group: DiceGroup } {
     const formula = this.formulaByStat[stat];
     if (formula === '3d6x5') {
       const group = this.dice.rollGroup([{ sides: 6, count: 3 }]);
